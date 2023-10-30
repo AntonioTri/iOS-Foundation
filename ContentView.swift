@@ -1,101 +1,134 @@
-import SwiftUI
+//
+//  ContentView.swift
+//  Lista
+//
+//  Created by Antonio Tridente on 23/10/23.
+//
 
-struct ContentView: View {
-    @State private var mainImageName = "parthenope"
-    @State private var mainImageLabel = ""
-    let defaultImage = "parthenope"
-    var body: some View {
-        
-        ZStack{
-            GeometryReader{ geometry in
-                Image("logo")
-                    .resizable()
-                    .aspectRatio(1, contentMode: .fill)
-                    .edgesIgnoringSafeArea([.top, .bottom])
-                    .blur(radius: 5)
-                    .opacity(0.15)
-                    .frame(width: geometry.size.width)
-            }
-            
-            VStack{
-                
-                Image(systemName: "globe")
-                    .imageScale(.large)
-                    .foregroundStyle(.tint)
-                
-                Text("Ciao mamma!")
-                    .foregroundColor(.blue)
-                    .font(.system(size: 30))
-                    .bold()
-                
-                Image(mainImageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .cornerRadius(20)
-                    .padding(10)
-                    .overlay(
-                        
-                        Text(mainImageLabel)
-                        .padding()
-                        .foregroundColor(.white)
-                        .font(.title), alignment: .bottom
-                    
-                    )
-                
-                
-                
-                HStack {
-                    
-                    CircularButton(imageName: "ciaramella", mainImage: $mainImageName, mainLabel: $mainImageLabel, defaultName: defaultImage, teamMember: "Angelo Ciaramella")
-                    CircularButton(imageName: "agliata", mainImage: $mainImageName, mainLabel: $mainImageLabel, defaultName: defaultImage, teamMember: "Antonio Aiata")
-                    CircularButton(imageName: "dicapua", mainImage: $mainImageName, mainLabel: $mainImageLabel, defaultName: defaultImage, teamMember: "Michele Di Capua")
-                    
-                } .padding()
-                
-                HStack {
-                    
-                    CircularButton(imageName: "dinardo", mainImage: $mainImageName, mainLabel: $mainImageLabel, defaultName: defaultImage, teamMember: "Emanuel Di Nardo")
-                    CircularButton(imageName: "finizio", mainImage: $mainImageName, mainLabel: $mainImageLabel, defaultName: defaultImage, teamMember: "Ignazio Finizio")
-                    CircularButton(imageName: "napolitano", mainImage: $mainImageName, mainLabel: $mainImageLabel, defaultName: defaultImage, teamMember: "Nunzio Napoitano")
-                    
-                } .padding()
-            }
-            .padding()
-        }
-    }
-}
+import SwiftUI
 
 #Preview {
     ContentView()
 }
 
-struct CircularButton: View {
+
+struct ContentView: View {
     
-    var imageName: String
-    @Binding var mainImage: String
-    @Binding var mainLabel: String
-    var defaultName: String
-    var teamMember: String
-    
+    @State private var counter1 = 0
+    @State private var counter2 = 0
+    @State private var counter3 = 0
+
     var body: some View {
-        Button(action: {
-            if self.mainImage != self.imageName {
-                
-                self.mainImage = self.imageName
-                self.mainLabel = self.teamMember
-                
-            } else {
-                
-                self.mainImage = self.defaultName
-                self.mainLabel = ""
-                
-            }
+            
+        VStack{
+            
+            Text("\(TotalButtons(x: counter1, y: counter2 , z: counter3))")
+                .font(.system(size: 200))
+                .fontDesign(.rounded)
+            
+            HStack{
+                AddButton(counter: $counter1, color: .red)
+                AddButton(counter: $counter2, color: .yellow)
+                AddButton(counter: $counter3, color: .green)
+            }.padding(20)
+            
+            ResetButton(counter1: $counter1, counter2: $counter2, counter3: $counter3, color: .blue)
+            .padding(20)
+            
+        }
+        
+    }
+}
+
+
+
+
+struct AddButton: View{
+    
+    @Binding var counter: Int
+    
+    var color: Color
+    
+    var body: some View{
+        
+        Button( action: {
+            self.counter += 1
+            
         }) {
-            Image(imageName)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .clipShape(Circle())
+            Circle()
+                //.frame(width: 100, height: 200)
+                .foregroundColor(color)
+                .overlay(
+                    Text("\(counter)")
+                        .font(.system(size: 70, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                )
+            
             
         }
     }
+}
+
+struct SubtractButton: View{
+    
+    @Binding var counter: Int
+    
+    var color: Color
+    
+    var body: some View{
+        
+        Button( action: {
+            self.counter -= 1
+            
+        }) {
+            Circle()
+                //.frame(width: 200, height: 200)
+                .foregroundColor(color)
+                .overlay(
+                    Text("\(counter)")
+                        .font(.system(size: 100, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                )
+            
+            
+        }
+    }
+}
+
+struct ResetButton: View{
+    
+    @Binding var counter1: Int
+    @Binding var counter2: Int
+    @Binding var counter3: Int
+    
+    var color: Color
+    
+    var body: some View{
+        
+        Button( action: {
+            self.counter1 = 0
+            self.counter2 = 0
+            self.counter3 = 0
+            
+        }) {
+            Circle()
+                //.frame(width: 200, height: 200)
+                .foregroundColor(color)
+                .overlay(
+                    Text("Reset all!")
+                        .font(.system(size: 40, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                )
+            
+            
+        }
+    }
+}
+
+
+
+func TotalButtons(x: Int, y: Int, z:Int) -> Int{
+
+    return x + y + z
+    
 }
